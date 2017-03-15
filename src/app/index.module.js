@@ -27,13 +27,19 @@ import {
   CloudantService
 } from '../app/components/cloudant/cloudant.service';
 import {
+  PDFService
+} from '../app/components/pdf/pdf.service';
+import {
+  ImageService
+} from '../app/components/image/image.service';
+import {
   NavbarDirective
 } from '../app/components/navbar/navbar.directive';
 import {
   MalarkeyDirective
 } from '../app/components/malarkey/malarkey.directive';
 
-angular.module('alertAdmin', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'ngMessages', 'ngAria', 'ui.router', 'ui.bootstrap', 'toastr', 'ui.grid', 'ui.grid.pagination', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.grouping', 'ui.grid.exporter', 'base64'])
+angular.module('alertAdmin', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'ngMessages', 'ngAria', 'ui.router', 'ui.bootstrap', 'toastr', 'ui.grid', 'ui.grid.pagination', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.grouping', 'ui.grid.exporter', 'base64', 'pdf'])
   .constant('malarkey', malarkey)
   .constant('moment', moment)
   .config(config)
@@ -42,6 +48,8 @@ angular.module('alertAdmin', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize',
   .service('githubContributor', GithubContributorService)
   .service('webDevTec', WebDevTecService)
   .service('cloudantService', CloudantService)
+  .service('pdfService', PDFService)
+  .service('imageService', ImageService)
 
   .controller('MainController', MainController)
   .controller('DetailController', DetailController)

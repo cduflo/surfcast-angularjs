@@ -1,5 +1,5 @@
 export class MainController {
-  constructor($timeout, webDevTec, toastr, $scope, workOrders) {
+  constructor($timeout, webDevTec, toastr, $scope, $state, workOrders) {
     'ngInject';
 
     this.awesomeThings = [];
@@ -39,10 +39,13 @@ export class MainController {
       data: workOrders,
       onRegisterApi: function(gridApi) {
         $scope.gridApi = gridApi;
-        // gridApi.selection.on.rowSelectionChanged($scope, (row) => {
-        //   // this.goToVoter(row.entity);
-        //   console.log(row.entity);
-        // });
+        gridApi.selection.on.rowSelectionChanged($scope, (row) => {
+          // this.goToVoter(row.entity);
+          $state.go('detail', {
+            id: row.entity._id
+          })
+          console.log(row.entity);
+        });
       }
     };
 

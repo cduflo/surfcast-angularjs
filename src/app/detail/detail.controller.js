@@ -1,20 +1,21 @@
 export class DetailController {
-  constructor($timeout, webDevTec, toastr) {
+  constructor($timeout, $stateParams, webDevTec, toastr, pdfService) {
     'ngInject';
 
     this.awesomeThings = [];
     this.classAnimation = '';
     this.creationDate = 1489536166170;
     this.toastr = toastr;
+    this.workOrderNum = $stateParams.id;
 
-    this.activate($timeout, webDevTec);
+    this.activate(pdfService);
   }
 
-  activate($timeout, webDevTec) {
-    this.getWebDevTec(webDevTec);
-    $timeout(() => {
-      this.classAnimation = 'rubberBand';
-    }, 4000);
+  activate(pdfService) {
+    pdfService.createSampleInvoice().then(result => {
+      const iframe = document.querySelector('#iframeContainer');
+      iframe.src = result;
+    })
   }
 
   getWebDevTec(webDevTec) {

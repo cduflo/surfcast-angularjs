@@ -18,7 +18,7 @@ export function routerConfig($stateProvider, $urlRouterProvider) {
       }
     })
     .state('detail', {
-      url: '/detail',
+      url: '/detail/:id',
       templateUrl: 'app/detail/detail.html',
       controller: 'DetailController',
       controllerAs: 'vm'
