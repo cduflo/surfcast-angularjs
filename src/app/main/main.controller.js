@@ -6,6 +6,7 @@ export class MainController {
     this.classAnimation = '';
     this.creationDate = 1489536166170;
     this.toastr = toastr;
+    this.workOrders = workOrders;
 
     this.columns = [{
       field: '_id',
@@ -20,9 +21,7 @@ export class MainController {
       field: 'subcontractor.email',
       displayName: 'Email'
     }, {
-      field: 'accepted'
-    }, {
-      field: 'completed'
+      field: 'status'
     }];
 
     this.gridOptions = {
@@ -49,22 +48,17 @@ export class MainController {
       }
     };
 
-    this.activate($timeout, webDevTec);
+    this.activate();
   }
 
-  activate($timeout, webDevTec) {
-    this.getWebDevTec(webDevTec);
-    $timeout(() => {
-      this.classAnimation = 'rubberBand';
-    }, 4000);
+  activate() {
+    this.upperStatus();
   }
 
-  getWebDevTec(webDevTec) {
-    this.awesomeThings = webDevTec.getTec();
-
-    angular.forEach(this.awesomeThings, (awesomeThing) => {
-      awesomeThing.rank = Math.random();
-    });
+  upperStatus() {
+    this.workOrders.forEach(wo => {
+      wo.status = wo.status.charAt(0).toUpperCase() + wo.status.slice(1);
+    })
   }
 
   showToastr() {

@@ -25,6 +25,18 @@ export class CloudantService {
     });
   }
 
+  _getById(id) {
+    const url = this.apiUrl;
+    return this.$http({
+      method: 'GET',
+      url: url + `/${id}?include_docs=true`
+    }).then(result => {
+      return result.data;
+    }).catch(err => {
+      return err;
+    });
+  }
+
   _search(query) {
     const url = this.apiUrl;
     return this.$http({
@@ -32,6 +44,20 @@ export class CloudantService {
       url: url + '/_find',
       data: query
     }).then(result => {
+      return result.data.docs;
+    }).catch(err => {
+      return err;
+    });
+  }
+
+  _put(id, data) {
+    const url = this.apiUrl;
+    return this.$http({
+      method: 'PUT',
+      url: url + `/${id}`,
+      data: data
+    }).then(result => {
+      console.log(result);
       return result.data.docs;
     }).catch(err => {
       return err;

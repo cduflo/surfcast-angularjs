@@ -21,7 +21,12 @@ export function routerConfig($stateProvider, $urlRouterProvider) {
       url: '/detail/:id',
       templateUrl: 'app/detail/detail.html',
       controller: 'DetailController',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      resolve: {
+        workOrder: ['$stateParams', 'cloudantService', ($stateParams, cloudantService) => {
+          return cloudantService._getById($stateParams.id)
+        }]
+      }
     });
 
   $urlRouterProvider.otherwise('/');

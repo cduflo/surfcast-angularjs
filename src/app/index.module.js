@@ -1,4 +1,4 @@
-/* global malarkey:false, moment:false */
+/* global malarkey:false, moment:false, lodash:false */
 
 import {
   config
@@ -42,6 +42,7 @@ import {
 angular.module('alertAdmin', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'ngMessages', 'ngAria', 'ui.router', 'ui.bootstrap', 'toastr', 'ui.grid', 'ui.grid.pagination', 'ui.grid.autoResize', 'ui.grid.selection', 'ui.grid.grouping', 'ui.grid.exporter', 'base64', 'pdf'])
   .constant('malarkey', malarkey)
   .constant('moment', moment)
+  .constant('_', window._)
   .config(config)
   .config(routerConfig)
   .run(runBlock)

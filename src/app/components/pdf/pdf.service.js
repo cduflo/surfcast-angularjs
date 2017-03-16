@@ -10,6 +10,18 @@ export class PDFService {
     this.$timeout = $timeout;
   }
 
+  createWorkOrder(wo) {
+    return this.createPDF(wo)
+      .then((pdf) => {
+        var blob = new Blob([pdf], {
+          type: 'application/pdf'
+        });
+        this.pdfUrl = URL.createObjectURL(blob);
+
+        return this.pdfUrl;
+      });
+  }
+
   createPDF(doc) {
     return this.$q((resolve, reject) => {
       this.$timeout(() => {
@@ -33,67 +45,280 @@ export class PDFService {
     return uint8Array;
   }
 
-  createDocumentDefinition(invoice, img) {
-    var items = invoice.Items.map(function(item) {
-      return [item.Description, item.Quantity, item.Price];
+  createDocumentDefinition(wo, img) {
+    console.log(wo);
+    var company = {
+      employee: 'David Denison',
+      address1: 'P.O. Box 20729',
+      address2: 'Bakersfield, CA 93390',
+      phone: '1-888-888-8888',
+      fax: '1-888-888-8888',
+      email: 'DWatkins@AlertDisaster.com'
+    };
+    var date = new Date().toLocaleDateString("en-IE", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
     });
+    var total = 0;
+    var items = wo.serviceItems.map(function(item) {
+      total += item.total;
+      return [item.name, item.notes || '', `$${item.total}`];
+    });
+
+
     var dd = {
       content: [{
-          image: img,
-          width: 150,
-          style: 'header',
-          alignment: 'left'
-        },
-        {
-          text: 'INVOICE',
-          style: 'header'
-        },
-        {
-          text: invoice.Date,
-          alignment: 'right'
+          columns: [{
+            // auto-sized columns have their widths based on their content
+            width: 'auto',
+            image: img,
+            width: 150,
+            style: 'header',
+            alignment: 'left'
+          }],
+          // optional space between columns
+          columnGap: 10
+        }, {
+          text: company.address1,
+          alignment: 'center',
+          bold: true
+        }, {
+          text: company.address2,
+          alignment: 'center',
+          bold: true
+        }, {
+          text: `Phone: ${company.phone}`,
+          alignment: 'center',
+          bold: true
+        }, {
+          text: `Fax: ${company.fax}`,
+          alignment: 'center',
+          bold: true
+        }, {
+          text: `Email: ${company.email}`,
+          alignment: 'center',
+          bold: true,
+          margin: [0, 0, 0, 10]
+        }, {
+          text: 'Work Order',
+          alignment: 'center',
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10]
+        }, {
+          text: [{
+            text: 'Printed On: ',
+            bold: true
+          }, {
+            text: date
+          }],
+          margin: [0, 0, 0, 10]
         },
 
         {
-          text: 'From',
-          style: 'subheader'
+          table: {
+            widths: ['*'],
+            body: [
+              [{
+                  columns: [{
+                    // auto-sized columns have their widths based on their content
+                    width: '33%',
+                    text: [{
+                      text: 'Work Order #: ',
+                      bold: true
+                    }, {
+                      text: wo._id
+                    }]
+                  }, {
+                    // fixed width
+                    width: '33%',
+                    text: [{
+                      text: 'Job #: ',
+                      bold: true
+                    }, {
+                      text: ''
+                    }, {
+                      text: '\nJob Name: ',
+                      bold: true
+                    }, {
+                      text: wo.client.owner
+                    }]
+                  }, {
+                    // percentage width
+                    width: '33%',
+                    text: [{
+                      text: 'Date: ',
+                      bold: true
+                    }, {
+                      text: date
+                    }]
+                  }],
+                  // optional space between columns
+                  columnGap: 5
+                }
+
+              ]
+            ]
+          },
+          margin: [0, 0, 0, 10]
         },
-        invoice.AddressFrom.Name,
-        invoice.AddressFrom.Address,
-        invoice.AddressFrom.Country,
 
         {
-          text: 'To',
-          style: 'subheader'
+          table: {
+            widths: ['*'],
+            margin: [0],
+            body: [
+              [{
+                  columns: [{
+                    // auto-sized columns have their widths based on their content
+                    width: '50%',
+                    text: [{
+                        text: 'Employee(ESTIMATOR): ',
+                        bold: true
+                      }, {
+                        text: `${company.employee} \n`
+                      },
+                      {
+                        text: 'Address: ',
+                        bold: true
+                      }, {
+                        text: `${company.address1}, ${company.address2}\n`
+                      },
+                      {
+                        text: 'Phone: ',
+                        bold: true
+                      }, {
+                        text: `${company.phone}\n`
+                      },
+                      {
+                        text: 'Fax: ',
+                        bold: true
+                      }, {
+                        text: `${company.fax}\n`
+                      },
+                      {
+                        text: 'Mobile: ',
+                        bold: true
+                      }, {
+                        text: `${company.phone}\n`
+                      },
+                      {
+                        text: 'Email: ',
+                        bold: true
+                      }, {
+                        text: `${company.email}`
+                      }
+                    ]
+                  }, {
+                    // fixed width
+                    width: '50%',
+                    text: [{
+                        text: 'Reference: ',
+                        bold: true
+                      }, {
+                        text: `${wo.subcontractor.name}\n`
+                      },
+                      {
+                        text: 'Address: ',
+                        bold: true
+                      }, {
+                        text: `${wo.subcontractor.address}\n`
+                      },
+                      {
+                        text: 'Phone: ',
+                        bold: true
+                      }, {
+                        text: `${wo.subcontractor.phone}\n`
+                      },
+                      {
+                        text: 'Fax: ',
+                        bold: true
+                      }, {
+                        text: wo.subcontractor.fax
+                      }
+                    ]
+                  }],
+                  // optional space between columns
+                  columnGap: 5
+                }
+
+              ]
+            ]
+          },
+          margin: [0, 0, 0, 10]
         },
-        invoice.AddressTo.Name,
-        invoice.AddressTo.Address,
-        invoice.AddressTo.Country,
 
         {
-          text: 'Items',
-          style: 'subheader'
+          table: {
+            widths: ['*'],
+            margin: [0],
+            body: [
+              [{
+                  columns: [{
+                    // auto-sized columns have their widths based on their content
+                    width: '50%',
+                    text: [{
+                        text: 'Customer Name: ',
+                        bold: true
+                      }, {
+                        text: `${wo.client.owner}\n${wo.client.address}\n`
+                      },
+                      {
+                        text: 'Main Phone: ',
+                        bold: true
+                      }, {
+                        text: `${wo.client.phone}\n`
+                      },
+                      {
+                        text: 'Email: ',
+                        bold: true
+                      }, {
+                        text: `${wo.client.email}\n`
+                      }
+                    ]
+                  }, {
+                    // fixed width
+                    width: '50%',
+                    text: [{
+                      text: 'Job Address: ',
+                      bold: true
+                    }, {
+                      text: `${wo.client.owner}\n${wo.client.address}\n`
+                    }]
+                  }],
+                  // optional space between columns
+                  columnGap: 5
+                }
+
+              ]
+            ]
+          },
+          margin: [0, 0, 0, 10]
         },
+
         {
           style: 'itemsTable',
           table: {
-            widths: ['*', 75, 75],
+            widths: ['*', '*', 75],
             body: [
               [{
                   text: 'Description',
                   style: 'itemsTableHeader'
                 },
                 {
-                  text: 'Quantity',
+                  text: 'Notes',
                   style: 'itemsTableHeader'
                 },
                 {
-                  text: 'Price',
+                  text: 'Amount',
                   style: 'itemsTableHeader'
                 },
               ]
             ].concat(items)
           }
         },
+
         {
           style: 'totalsTable',
           table: {
@@ -101,18 +326,8 @@ export class PDFService {
             body: [
               [
                 '',
-                'Subtotal',
-                invoice.Subtotal,
-              ],
-              [
-                '',
-                'Shipping',
-                invoice.Shipping,
-              ],
-              [
-                '',
                 'Total',
-                invoice.Total,
+                `$${total}`,
               ]
             ]
           },
@@ -141,17 +356,15 @@ export class PDFService {
         },
         totalsTable: {
           bold: true,
-          margin: [0, 30, 0, 0]
+          margin: [0, 10, 0, 0]
         }
-      },
-      defaultStyle: {}
+      }
     }
 
     return dd;
   }
 
   createSampleInvoice() {
-    this.setDefaultsForPdfViewer();
     var invoice = this.getDummyData();
 
     return this.createPDF(invoice)
@@ -203,20 +416,4 @@ export class PDFService {
     };
   }
 
-  setDefaultsForPdfViewer() {
-    // this.$scope.scroll = 0;
-    // this.$scope.loading = 'loading';
-    //
-    // this.$scope.onError = function(error) {
-    //   console.error(error);
-    // };
-    //
-    // this.$scope.onLoad = function() {
-    //   this.$scope.loading = '';
-    // };
-    //
-    // this.$scope.onProgress = function(progress) {
-    //   console.log(progress);
-    // };
-  }
 }
