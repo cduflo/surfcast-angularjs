@@ -51,9 +51,9 @@ export class PDFService {
       employee: 'David Denison',
       address1: 'P.O. Box 20729',
       address2: 'Bakersfield, CA 93390',
-      phone: '1-888-888-8888',
-      fax: '1-888-888-8888',
-      email: 'DWatkins@AlertDisaster.com'
+      phone: '1-877-435-8117',
+      fax: '1-661-396-1728',
+      email: 'accounting@alertdisaster.com'
     };
     var date = new Date().toLocaleDateString("en-IE", {
       year: "numeric",
@@ -63,8 +63,12 @@ export class PDFService {
     var total = 0;
     var items = wo.serviceItems.map(function(item) {
       total += item.total;
-      return [item.name, item.notes || '', `$${item.total}`];
+      var noteDetails = [item.notes,item.woDetail].join(' ');
+      return [item.name, noteDetails, `$${item.total}`];
     });
+    var subAddr = (wo.subcontractor.address) ? wo.subcontractor.address : '';
+    var subPhone = (wo.subcontractor.phone) ? wo.subcontractor.phone : '';
+
 
 
     var dd = {
@@ -128,7 +132,7 @@ export class PDFService {
                       text: 'Work Order #: ',
                       bold: true
                     }, {
-                      text: wo._id
+                      text: wo._id.slice(0,20)
                     }]
                   }, {
                     // fixed width
@@ -198,12 +202,6 @@ export class PDFService {
                         text: `${company.fax}\n`
                       },
                       {
-                        text: 'Mobile: ',
-                        bold: true
-                      }, {
-                        text: `${company.phone}\n`
-                      },
-                      {
                         text: 'Email: ',
                         bold: true
                       }, {
@@ -223,13 +221,13 @@ export class PDFService {
                         text: 'Address: ',
                         bold: true
                       }, {
-                        text: `${wo.subcontractor.address}\n`
+                        text: `${subAddr}\n`
                       },
                       {
                         text: 'Phone: ',
                         bold: true
                       }, {
-                        text: `${wo.subcontractor.phone}\n`
+                        text: `${subPhone}\n`
                       },
                       {
                         text: 'Fax: ',
