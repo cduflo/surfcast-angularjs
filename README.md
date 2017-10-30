@@ -1,4 +1,5 @@
-> Alert Admin Portal
+> Skeleton AngularJS app
+>> Functioning as a surf forecasting app
 
 # Dev #
 

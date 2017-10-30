@@ -1,32 +1,19 @@
 describe('controllers', () => {
   let vm;
 
-  beforeEach(angular.mock.module('alertAdmin'));
+  beforeEach(angular.mock.module('surfcast'));
 
-  beforeEach(inject(($controller, webDevTec, toastr) => {
-    spyOn(webDevTec, 'getTec').and.returnValue([{}, {}, {}, {}, {}]);
-    spyOn(toastr, 'info').and.callThrough();
-
-    vm = $controller('MainController');
+  beforeEach(inject(($controller, $rootScope) => {
+    var scope = $rootScope.$new();
+    var counties = ['San Diego', 'Huntington'];
+    vm = $controller('MainController', {$scope: scope, counties: counties});
   }));
 
-  it('should have a timestamp creation date', () => {
-    expect(vm.creationDate).toEqual(jasmine.any(Number));
+  it('should have an array of counties', () => {
+    expect(angular.isArray(vm.counties)).toBeTruthy();
   });
 
-  it('should define animate class after delaying timeout', inject($timeout => {
-    $timeout.flush();
-    expect(vm.classAnimation).toEqual('rubberBand');
-  }));
-
-  it('should show a Toastr info and stop animation when invoke showToastr()', inject(toastr => {
-    vm.showToastr();
-    expect(toastr.info).toHaveBeenCalled();
-    expect(vm.classAnimation).toEqual('');
-  }));
-
-  it('should define more than 5 awesome things', () => {
-    expect(angular.isArray(vm.awesomeThings)).toBeTruthy();
-    expect(vm.awesomeThings.length === 5).toBeTruthy();
+  it('should have greater than 0 counties', () => {
+    expect(vm.counties.length > 0).toBeTruthy();
   });
 });

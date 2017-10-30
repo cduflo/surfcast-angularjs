@@ -1,0 +1,25 @@
+<div class="container">
+
+  <div class="jumbotron text-center">
+    <h2>{{::vm.spotName}}</h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <h4>Time</h4>
+        </div>
+        <div class="col-sm-6">
+          <h4>Wave Height</h4>
+        </div>
+      </div>
+      <div class="row" ng-repeat="data in vm.spot">
+        <div class="col-sm-6">
+          <p>{{data.hour}}</p>
+        </div>
+        <div class="col-sm-6">
+          <p>{{data.size}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

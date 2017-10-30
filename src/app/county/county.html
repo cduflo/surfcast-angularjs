@@ -1,0 +1,20 @@
+<div class="container">
+
+  <div class="jumbotron text-center">
+    <h2>{{::vm.county.county}}</h2>
+    <select ng-model="vm.spotSelection" ng-change="vm.goToSpot(vm.spotSelection)" ng-options="spot.spot_name for spot in vm.spots">
+      <option value="">-- choose a spot --</option>
+    </select>
+    <div class="container">
+      <div class="row" ng-repeat="data in vm.datapoints">
+        <div class="col-sm-6">
+          <h4>{{data.title}}</h4>
+        </div>
+        <div class="col-sm-6">
+          <p>{{data.info}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

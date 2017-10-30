@@ -1,25 +1,10 @@
-<div class="container">
+  <div class="container">
 
-<!-- <div>
-    <acme-navbar creation-date="main.creationDate"></acme-navbar>
-  </div> -->
-
-  <div class="jumbotron text-center">
-    <div ui-grid="vm.gridOptions" ui-grid-pagination ui-grid-selection class="myGrid"></div>
-
-  </div>
-
-  <div class="row">
-    <div class="col-sm-6 col-md-4" ng-repeat="awesomeThing in main.awesomeThings | orderBy:'rank'">
-      <div class="thumbnail">
-        <img class="pull-right" ng-src="assets/images/{{ awesomeThing.logo }}" alt="{{ awesomeThing.title }}">
-        <div class="caption">
-          <h3>{{ awesomeThing.title }}</h3>
-          <p>{{ awesomeThing.description }}</p>
-          <p><a ng-href="{{awesomeThing.url}}">{{ awesomeThing.url }}</a></p>
-        </div>
-      </div>
+    <div class="jumbotron text-center">
+      <h2>Get Your Surf Forecast</h2>
+      <select ng-model="vm.countySelection" ng-change="vm.goToCounty(vm.countySelection)" ng-options="county for county in vm.counties">
+        <option value="">-- choose a county --</option>
+      </select>
     </div>
-  </div>
 
-</div>
+  </div>

@@ -7,24 +7,33 @@ export function routerConfig($stateProvider, $urlRouterProvider) {
       controller: 'MainController',
       controllerAs: 'vm',
       resolve: {
-        workOrders: ['$stateParams', 'cloudantService', ($stateParams, cloudantService) => {
-          let query = {
-            "selector": {
-              "type": "workOrder"
-            }
-          }
-          return cloudantService._search(query)
+        counties: ['$stateParams', 'forecastService', ($stateParams, forecastService) => {
+          return forecastService._getAllCounties();
         }]
       }
     })
-    .state('detail', {
-      url: '/detail/:id',
-      templateUrl: 'app/detail/detail.html',
-      controller: 'DetailController',
+    .state('county', {
+      url: '/county/:countyName',
+      templateUrl: 'app/county/county.html',
+      controller: 'CountyController',
       controllerAs: 'vm',
       resolve: {
-        workOrder: ['$stateParams', 'cloudantService', ($stateParams, cloudantService) => {
-          return cloudantService._getById($stateParams.id)
+        countyData: ['$stateParams', 'forecastService', ($stateParams, forecastService) => {
+          return forecastService._getCountyData($stateParams.countyName);
+        }],
+        spots: ['$stateParams', 'forecastService', ($stateParams, forecastService) => {
+          return forecastService._getSpots($stateParams.countyName);
+        }]
+      }
+    })
+    .state('spot', {
+      url: '/spot/:id',
+      templateUrl: 'app/spot/spot.html',
+      controller: 'SpotController',
+      controllerAs: 'vm',
+      resolve: {
+        spotData: ['$stateParams', 'forecastService', ($stateParams, forecastService) => {
+          return forecastService._getSpotData($stateParams.id);
         }]
       }
     });
